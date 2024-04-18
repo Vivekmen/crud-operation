@@ -49,7 +49,7 @@ const server = http.createServer((req, res) => {
         res.end();
       }
     });
-  } else if (req.method == "GET" && req.url === "/users") {
+  } else if (req.method == "GET" && req.url === "/user") {
 
     res.writeHead(200, { "Content-Type": "application/json" });
     res.write(JSON.stringify(data));
