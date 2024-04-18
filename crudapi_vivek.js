@@ -9,7 +9,7 @@ const server = http.createServer((req, res) => {
 
   const { pathname, query } = url.parse(req.url, true);
 
-  if (req.method == "POST" && req.url === "/user") {
+  if (req.method == "POST" && req.url === "/api/v1/user") {
     let bodydata = "";
     req.on("data", (chunk) => {
       bodydata += chunk;
@@ -20,7 +20,7 @@ const server = http.createServer((req, res) => {
       const findelement = data.some((e) => e.username === username);
 
       if (!findelement) {
-        if (!username == "" && !password == "") {
+        if (!username == "" && !email==""&&!password == "") {
           if (email.match(emailformat) && password.match(passwordformat)) {
             data.push(JSON.parse(bodydata));
             res.writeHead(200, { "Content-Type": "application/json" });
@@ -44,24 +44,23 @@ const server = http.createServer((req, res) => {
         }
       } else {
         res.writeHead(409, { "Content-Type": "application/json" });
-        res.write(JSON.stringify(data));
         res.write(JSON.stringify({ msg: "User already exist" }));
         res.end();
       }
     });
-  } else if (req.method == "GET" && req.url === "/user") {
+  } else if (req.method == "GET" && req.url === "/api/v1/user") {
 
     res.writeHead(200, { "Content-Type": "application/json" });
     res.write(JSON.stringify(data));
     res.end();
 
-  } else if (req.method == "GET" &&pathname === "/user" &&query.username !== undefined) {
+  } else if (req.method == "GET" &&pathname === "/api/v1/user" &&query.username !== undefined) {
 
-    const { username, email, password } = query;
-    const findidxsearch = data.findIndex((e) => e.username === username);
-    if (findidxsearch != -1) {
+    const { username } = query;
+    const filterdata = data.filter((e) => e.username.includes(username));
+    if (filterdata) {
       res.writeHead(200, { "Content-Type": "application/json" });
-      res.write(JSON.stringify(data[findidxsearch]));
+      res.write(JSON.stringify(find));
       res.end();
     } else {
       res.writeHead(409, { "Content-Type": "application/json" });
@@ -69,7 +68,7 @@ const server = http.createServer((req, res) => {
       res.end();
     }
 
-  } else if (req.method == "PATCH" && req.url === "/user") {
+  } else if (req.method == "PATCH" && req.url === "/api/v1/user") {
 
     let bodydata = "";
     req.on("data", (chunk) => {
@@ -92,7 +91,7 @@ const server = http.createServer((req, res) => {
       }
 
     });
-  } else if (req.method == "DELETE" && req.url === "/user") {
+  } else if (req.method == "DELETE" && req.url === "/api/v1/user") {
 
     let bodydata = "";
     req.on("data", (chunk) => {
